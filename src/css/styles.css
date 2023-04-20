@@ -10,35 +10,126 @@
   grid-auto-rows: 240px;
   grid-gap: 12px;
   justify-content: center;
-  padding: 0;
-  list-style: none;
   margin-left: auto;
   margin-right: auto;
+  padding: 85px 0 0;
+  margin-bottom: 10px;
 }
 
-.gallery__item {
+.photo__card {
   position: relative;
-  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
-    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 2px 1px -1px rgba(0, 0, 0, 0.12);
 }
 
-.gallery__image:hover {
+.photo__image:hover {
   transform: scale(1.03);
 }
 
-.gallery__image {
+.photo__image {
   height: 100%;
   width: 100%;
   object-fit: cover;
   transition: transform var(--animation-duration) var(--timing-function);
 }
 
-.gallery__link {
+.photo__link {
   display: block;
   text-decoration: none;
   height: 100%;
 }
 
-.gallery__link:hover {
+.photo__link:hover {
   cursor: zoom-in;
+}
+
+.search-form {
+  position: relative;
+  position: fixed;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  background-color: #117fe667;
+  padding: 20px;
+  width: 100%;
+}
+
+.search:hover,
+.search:focus {
+  background-color: #188ce8;
+  border-color: #188ce8;
+}
+
+.search-form__icon:hover,
+.search-form__icon:focus {
+  background-color: #188ce8;
+}
+
+.load-more {
+  display: block;
+  margin: auto;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+}
+
+.load-more.hidden {
+  display: none;
+}
+
+.load-more:hover,
+.load-more:focus {
+  background-color: #188ce8;
+  border-color: #188ce8;
+  color: aliceblue;
+}
+
+.search-form__icon {
+  width: 20px;
+  height: 20px;
+  color: currentColor;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icon-spinner {
+  display: none;
+}
+
+.search.is-click .icon-search {
+  display: none;
+}
+
+.info {
+  display: flex;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20%;
+  background-color: #3f51b59a;
+
+  transform: translateY(100%);
+  transition: transform 250ms ease;
+}
+
+.photo__card:hover .overlay {
+  transform: translateY(0);
+}
+
+.overlay p {
+  display: block;
+  align-items: center;
+  color: #fff;
+  padding: 10px;
+  margin: 0;
+  font-size: 12px;
+}
+
+.info-item b {
+  display: inline-block;
+  margin-right: 5px;
 }
