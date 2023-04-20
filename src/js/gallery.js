@@ -3,7 +3,7 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import axios from 'axios';
 import { refs } from './refs';
-import { onClickButton } from './SearchButton';
+import onClickButton from './SearchButton';
 import NewsApiService from './GetApi';
 import LoadMoreBtn from './LoadMoreBtn';
 

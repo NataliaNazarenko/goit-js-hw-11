@@ -2,7 +2,7 @@ import { refs } from './refs';
 
 refs.buttonSearch.addEventListener('click', onClickButton);
 
-function onClickButton() {
+export default function onClickButton() {
   refs.buttonSearch.classList.add('is-click');
   refs.spinnerIcon.style.display = 'block';
 
@@ -12,4 +12,4 @@ function onClickButton() {
   }, 2000);
 }
 
-export { onClickButton };
+// export { onClickButton };
