@@ -90,10 +90,6 @@ function updateNewsList(markup) {
 
 // refs.gallery.refresh();
 
-// function onLoadMore() {
-//   newsApiService.getImages().then(hits => console.log(hits));
-// }
-
 function clearNewsList() {
   refs.gallery.innerHTML = '';
 }
