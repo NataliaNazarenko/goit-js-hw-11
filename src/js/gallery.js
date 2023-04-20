@@ -1,11 +1,10 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import axios from 'axios';
 import { refs } from './refs';
-import onClickButton from './SearchButton';
 import NewsApiService from './GetApi';
 import LoadMoreBtn from './LoadMoreBtn';
+import onClickButton from './SearchButton';
 
 const newsApiService = new NewsApiService();
 const loadMoreBtn = new LoadMoreBtn({
@@ -30,6 +29,7 @@ function onSearch(event) {
 }
 
 async function fetchImages() {
+  onClickButton();
   try {
     const markup = await getImagesMarkup();
     updateNewsList(markup);
