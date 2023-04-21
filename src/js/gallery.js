@@ -55,11 +55,13 @@ async function getImagesMarkup() {
   }
 }
 
-const gallery = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionPosition: 'bottom',
-  captionDelay: 250,
-});
+const gallery = new SimpleLightbox('.gallery a');
+
+// const gallery = new SimpleLightbox('.gallery a', {
+//   captionsData: 'alt',
+//   captionPosition: 'bottom',
+//   captionDelay: 250,
+// });
 
 function createMarkup({ largeImageURL, tags, webformatURL, likes, views, comments, downloads }) {
   return `
