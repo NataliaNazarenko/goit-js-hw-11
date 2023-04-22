@@ -25,7 +25,7 @@ function onSearch(event) {
   clearNewsList();
   fetchImages();
   totalFoundImages();
-  // .finally(() => searchForm.reset());
+  gallery.refresh();
 }
 
 async function fetchImages() {
@@ -35,6 +35,7 @@ async function fetchImages() {
     updateNewsList(markup);
     loadMoreBtn.show();
     loadMoreBtn.enable();
+    gallery.refresh();
   } catch (error) {
     onFetchError(error);
   }
@@ -48,20 +49,17 @@ async function getImagesMarkup() {
       Notify.info('Sorry, there are no images matching your search query. Please try again.');
       loadMoreBtn.hide();
     }
-
     return hits.reduce((markup, hit) => markup + createMarkup(hit), '');
   } catch (error) {
     onFetchError(error);
   }
 }
 
-const gallery = new SimpleLightbox('.gallery a');
-
-// const gallery = new SimpleLightbox('.gallery a', {
-//   captionsData: 'alt',
-//   captionPosition: 'bottom',
-//   captionDelay: 250,
-// });
+const gallery = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  captionDelay: 250,
+});
 
 function createMarkup({ largeImageURL, tags, webformatURL, likes, views, comments, downloads }) {
   return `
@@ -88,21 +86,18 @@ function createMarkup({ largeImageURL, tags, webformatURL, likes, views, comment
 
 function updateNewsList(markup) {
   if (markup !== undefined) refs.gallery.insertAdjacentHTML('beforeend', markup);
+
+  loadMoreBtn.hide();
+  loadMoreBtn.enable();
 }
-
-// refs.gallery.refresh();
-
-// function onLoadMore() {
-//   newsApiService.getImages().then(hits => console.log(hits));
-// }
 
 function clearNewsList() {
   refs.gallery.innerHTML = '';
 }
 
 function onFetchError(error) {
-  loadMoreBtn.hide();
   if (!error.status) {
+    loadMoreBtn.hide();
     Notify.failure('Oops, there is no country with that name');
   }
 }
@@ -118,8 +113,22 @@ function slowScroll() {
   });
 }
 
-function totalFoundImages() {
-  newsApiService.getImages().then(({ totalHits }) => {
-    return Notify.success(`Hooray! We found ${totalHits} images.`);
+async function totalFoundImages() {
+  try {
+    newsApiService.getImages().then(({ totalHits }) => {
+      return Notify.success(`Hooray! We found ${totalHits} images.`);
+    });
+  } catch (error) {
+    onFetchError(error);
+  }
+}
+
+function totalRunOutImages() {
+  let total = newsApiService.getImages().then();
+  console.log(total);
+  newsApiService.getImages().then(({ totalHits, total }) => {
+    if (totalHits === total) {
+      return Notify.success("We're sorry, but you've reached the end of search results.");
+    }
   });
 }

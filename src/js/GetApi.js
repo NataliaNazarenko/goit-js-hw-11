@@ -12,6 +12,7 @@ export default class NewsApiService {
     this.searchQuery = '';
     this.page = 1;
     this.totalHits = 0;
+    this.total = 0;
   }
 
   async getImages() {
@@ -46,4 +47,12 @@ export default class NewsApiService {
   set hits(newHits) {
     this.totalHits = newHits;
   }
+
+  // get total() {
+  //   return this.total;
+  // }
+
+  // set total(newTotal) {
+  //   this.total = newTotal;
+  // }
 }
