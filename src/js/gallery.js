@@ -12,17 +12,14 @@ const loadMoreBtn = new LoadMoreBtn({
   isHidden: true,
 });
 
-loadMoreBtn.hide();
-
 refs.searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.button.addEventListener('click', fetchImages);
 
 function onSearch(event) {
   event.preventDefault();
-  loadMoreBtn.hide();
   newsApiService.query = event.currentTarget.elements.searchQuery.value.trim();
   newsApiService.resetPage();
-  clearNewsList();
+  clearGalleryList();
   fetchImages();
   totalFoundImages();
   gallery.refresh();
@@ -33,8 +30,6 @@ async function fetchImages() {
   try {
     const markup = await getImagesMarkup();
     updateNewsList(markup);
-    loadMoreBtn.show();
-    loadMoreBtn.enable();
     gallery.refresh();
   } catch (error) {
     onFetchError(error);
@@ -46,9 +41,20 @@ async function getImagesMarkup() {
     const { hits } = await newsApiService.getImages();
 
     if (hits.length === 0) {
-      Notify.info('Sorry, there are no images matching your search query. Please try again.');
-      loadMoreBtn.hide();
+      return Notify.info(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
     }
+    newsApiService.getImages().then(({ totalHits, total }) => {
+      console.log(total);
+      console.log(totalHits);
+      if (totalHits === total) {
+        loadMoreBtn.show();
+        loadMoreBtn.hide();
+
+        return Notify.success("We're sorry, but you've reached the end of search results.");
+      }
+    });
     return hits.reduce((markup, hit) => markup + createMarkup(hit), '');
   } catch (error) {
     onFetchError(error);
@@ -85,20 +91,25 @@ function createMarkup({ largeImageURL, tags, webformatURL, likes, views, comment
 }
 
 function updateNewsList(markup) {
-  if (markup !== undefined) refs.gallery.insertAdjacentHTML('beforeend', markup);
-
-  loadMoreBtn.hide();
-  loadMoreBtn.enable();
+  if (markup !== undefined) {
+    loadMoreBtn.show();
+    loadMoreBtn.enable();
+    refs.gallery.insertAdjacentHTML('beforeend', markup);
+  }
 }
 
-function clearNewsList() {
+function clearGalleryList() {
   refs.gallery.innerHTML = '';
 }
 
 function onFetchError(error) {
+  if (newsApiService.key === '') {
+    loadMoreBtn.hide();
+    return Notify.failure('Error, invalid or missing API key');
+  }
   if (!error.status) {
     loadMoreBtn.hide();
-    Notify.failure('Oops, there is no country with that name');
+    return Notify.failure('Oops, something went wrong, please try again.');
   }
 }
 
@@ -121,14 +132,4 @@ async function totalFoundImages() {
   } catch (error) {
     onFetchError(error);
   }
-}
-
-function totalRunOutImages() {
-  let total = newsApiService.getImages().then();
-  console.log(total);
-  newsApiService.getImages().then(({ totalHits, total }) => {
-    if (totalHits === total) {
-      return Notify.success("We're sorry, but you've reached the end of search results.");
-    }
-  });
 }

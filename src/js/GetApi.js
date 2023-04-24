@@ -2,17 +2,15 @@ import axios from 'axios';
 
 const API_KEY = '35413262-7ae9db1d2d6405a91836db282';
 const URL = 'https://pixabay.com/api';
-const options = {
-  headers: {
-    Authorization: API_KEY,
-  },
-};
+
 export default class NewsApiService {
-  constructor() {
+  constructor(total, totalHits) {
     this.searchQuery = '';
     this.page = 1;
-    this.totalHits = 0;
-    this.total = 0;
+    this.totalHits = totalHits;
+    this.total = total;
+    this.key = API_KEY;
+    this.remainder = 0;
   }
 
   async getImages() {
@@ -21,6 +19,8 @@ export default class NewsApiService {
     );
 
     this.incrementPage();
+    this.incrementTotalHits();
+    this.leftImages();
     return data;
   }
 
@@ -48,11 +48,11 @@ export default class NewsApiService {
     this.totalHits = newHits;
   }
 
-  // get total() {
-  //   return this.total;
-  // }
+  incrementTotalHits() {
+    this.totalHits += this.totalHits;
+  }
 
-  // set total(newTotal) {
-  //   this.total = newTotal;
-  // }
+  leftImages() {
+    this.remainder = this.total - this.totalHits;
+  }
 }
