@@ -21,7 +21,6 @@ function onSearch(event) {
   newsApiService.resetPage();
   clearGalleryList();
   fetchImages();
-  gallery.refresh();
 }
 
 async function fetchImages() {
@@ -30,7 +29,6 @@ async function fetchImages() {
     const markup = await getImagesMarkup();
     updateGalleryList(markup);
     gallery.refresh();
-    totalFoundImages();
   } catch (error) {
     onFetchError(error);
   }
@@ -38,20 +36,27 @@ async function fetchImages() {
 
 async function getImagesMarkup() {
   try {
-    const { hits } = await newsApiService.getImages();
+    const { hits, totalHits } = await newsApiService.getImages();
+    let totalHitsPerPage = newsApiService.incrementTotalHits();
+    newsApiService.hits = totalHits;
+    const remainder = newsApiService.leftImages();
 
     if (hits.length === 0) {
       return Notify.info(
         'Sorry, there are no images matching your search query. Please try again.'
       );
+    } else if (hits.length === totalHitsPerPage) {
+      Notify.success(`Hooray! We found ${totalHits} images.`);
+    } else if (hits.length === totalHits) {
+      Notify.warning('These are all images for your request.');
     }
-    newsApiService.getImages().then(({ totalHits, total }) => {
-      if (totalHits === total) {
-        loadMoreBtn.show();
-        loadMoreBtn.hide();
-        return Notify.success("We're sorry, but you've reached the end of search results.");
-      }
-    });
+
+    if (remainder < totalHitsPerPage && remainder === 0) {
+      loadMoreBtn.show();
+      loadMoreBtn.hide();
+      return Notify.warning("We're sorry, but you've reached the end of search results.");
+    }
+
     return hits.reduce((markup, hit) => markup + createMarkup(hit), '');
   } catch (error) {
     onFetchError(error);
@@ -119,18 +124,4 @@ function slowScroll() {
     top: cardHeight * 2,
     behavior: 'smooth',
   });
-}
-
-async function totalFoundImages() {
-  try {
-    newsApiService.getImages().then(({ totalHits, total }) => {
-      const hits = new NewsApiService(totalHits);
-      const totals = new NewsApiService(total);
-      console.log(hits);
-      console.log(totals);
-      return Notify.success(`Hooray! We found ${totalHits} images.`);
-    });
-  } catch (error) {
-    onFetchError(error);
-  }
 }

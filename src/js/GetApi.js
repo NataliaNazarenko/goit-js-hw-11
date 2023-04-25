@@ -11,6 +11,7 @@ export default class NewsApiService {
     this.total = total;
     this.key = API_KEY;
     this.remainder = 0;
+    this.per_page = 40;
   }
 
   async getImages() {
@@ -19,8 +20,6 @@ export default class NewsApiService {
     );
 
     this.incrementPage();
-    this.incrementTotalHits();
-    this.leftImages();
     return data;
   }
 
@@ -30,6 +29,7 @@ export default class NewsApiService {
 
   resetPage() {
     this.page = 1;
+    this.total = 0;
   }
 
   get query() {
@@ -49,10 +49,10 @@ export default class NewsApiService {
   }
 
   incrementTotalHits() {
-    this.totalHits += this.totalHits;
+    return (this.total += this.per_page);
   }
 
   leftImages() {
-    this.remainder = this.total - this.totalHits;
+    return (this.remainder = this.totalHits - this.total);
   }
 }
