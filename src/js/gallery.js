@@ -29,7 +29,7 @@ async function fetchImages() {
   onClickButton();
   try {
     const markup = await getImagesMarkup();
-    updateNewsList(markup);
+    updateGalleryList(markup);
     gallery.refresh();
   } catch (error) {
     onFetchError(error);
@@ -90,7 +90,7 @@ function createMarkup({ largeImageURL, tags, webformatURL, likes, views, comment
   </div>`;
 }
 
-function updateNewsList(markup) {
+function updateGalleryList(markup) {
   if (markup !== undefined) {
     loadMoreBtn.show();
     loadMoreBtn.enable();
