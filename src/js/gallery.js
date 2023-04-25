@@ -21,7 +21,6 @@ function onSearch(event) {
   newsApiService.resetPage();
   clearGalleryList();
   fetchImages();
-  totalFoundImages();
   gallery.refresh();
 }
 
@@ -31,6 +30,7 @@ async function fetchImages() {
     const markup = await getImagesMarkup();
     updateGalleryList(markup);
     gallery.refresh();
+    totalFoundImages();
   } catch (error) {
     onFetchError(error);
   }
@@ -46,12 +46,9 @@ async function getImagesMarkup() {
       );
     }
     newsApiService.getImages().then(({ totalHits, total }) => {
-      console.log(total);
-      console.log(totalHits);
       if (totalHits === total) {
         loadMoreBtn.show();
         loadMoreBtn.hide();
-
         return Notify.success("We're sorry, but you've reached the end of search results.");
       }
     });
@@ -127,6 +124,8 @@ function slowScroll() {
 async function totalFoundImages() {
   try {
     newsApiService.getImages().then(({ totalHits }) => {
+      const hits = new NewsApiService(totalHits);
+      console.log(hits);
       return Notify.success(`Hooray! We found ${totalHits} images.`);
     });
   } catch (error) {
