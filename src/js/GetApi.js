@@ -4,7 +4,7 @@ const API_KEY = '35413262-7ae9db1d2d6405a91836db282';
 const URL = 'https://pixabay.com/api';
 
 export default class NewsApiService {
-  constructor(total, totalHits) {
+  constructor(total = 0, totalHits = 0) {
     this.searchQuery = '';
     this.page = 1;
     this.totalHits = totalHits;

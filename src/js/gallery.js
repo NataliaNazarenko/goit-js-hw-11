@@ -123,9 +123,11 @@ function slowScroll() {
 
 async function totalFoundImages() {
   try {
-    newsApiService.getImages().then(({ totalHits }) => {
+    newsApiService.getImages().then(({ totalHits, total }) => {
       const hits = new NewsApiService(totalHits);
+      const totals = new NewsApiService(total);
       console.log(hits);
+      console.log(totals);
       return Notify.success(`Hooray! We found ${totalHits} images.`);
     });
   } catch (error) {
