@@ -28,6 +28,7 @@ async function fetchImages() {
   try {
     const markup = await getImagesMarkup();
     updateGalleryList(markup);
+    slowScroll();
     gallery.refresh();
   } catch (error) {
     onFetchError(error);
@@ -37,9 +38,13 @@ async function fetchImages() {
 async function getImagesMarkup() {
   try {
     const { hits, totalHits } = await newsApiService.getImages();
-    let totalHitsPerPage = newsApiService.incrementTotalHits();
+    const totalHitsPerPage = newsApiService.incrementTotalHits();
     newsApiService.hits = totalHits;
     const remainder = newsApiService.leftImages();
+
+    console.log(totalHits);
+    console.log(totalHitsPerPage);
+    console.log(remainder);
 
     if (hits.length === 0) {
       return Notify.info(
