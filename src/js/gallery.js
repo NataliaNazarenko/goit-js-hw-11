@@ -25,11 +25,12 @@ function onSearch(event) {
 
 async function fetchImages() {
   onClickButton();
+
   try {
     const markup = await getImagesMarkup();
     updateGalleryList(markup);
-    slowScroll();
     gallery.refresh();
+    slowScroll(0.3);
   } catch (error) {
     onFetchError(error);
   }
@@ -50,10 +51,14 @@ async function getImagesMarkup() {
       return Notify.info(
         'Sorry, there are no images matching your search query. Please try again.'
       );
+    }
+
+    if (hits.length === totalHits) {
+      loadMoreBtn.show();
+      loadMoreBtn.disable();
+      Notify.warning('These are all images for your request.');
     } else if (hits.length === totalHitsPerPage) {
       Notify.success(`Hooray! We found ${totalHits} images.`);
-    } else if (hits.length === totalHits) {
-      Notify.warning('These are all images for your request.');
     }
 
     if (remainder < totalHitsPerPage && remainder === 0) {
@@ -103,6 +108,7 @@ function updateGalleryList(markup) {
     loadMoreBtn.enable();
     refs.gallery.insertAdjacentHTML('beforeend', markup);
   }
+  slowScroll(2);
 }
 
 function clearGalleryList() {
@@ -120,13 +126,13 @@ function onFetchError(error) {
   }
 }
 
-function slowScroll() {
+function slowScroll(x) {
   const { height: cardHeight } = document
     .querySelector('.gallery')
     .firstElementChild.getBoundingClientRect();
 
   window.scrollBy({
-    top: cardHeight * 2,
+    top: cardHeight * x,
     behavior: 'smooth',
   });
 }
