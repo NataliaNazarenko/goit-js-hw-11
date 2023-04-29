@@ -4,21 +4,19 @@ const API_KEY = '35413262-7ae9db1d2d6405a91836db282';
 const URL = 'https://pixabay.com/api';
 
 export default class NewsApiService {
-  constructor(total = 0, totalHits = 0) {
+  constructor(totalHits = 0) {
+    this.key = API_KEY;
     this.searchQuery = '';
     this.page = 1;
-    this.totalHits = totalHits;
-    this.total = total;
-    this.key = API_KEY;
-    this.remainder = 0;
     this.per_page = 40;
+    this.totalPages = 0;
+    this.totalHits = totalHits;
   }
 
   async getImages() {
     const { data } = await axios.get(
       `${URL}/?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`
     );
-
     this.incrementPage();
     return data;
   }
@@ -29,7 +27,7 @@ export default class NewsApiService {
 
   resetPage() {
     this.page = 1;
-    this.total = 0;
+    this.totalPages = 0;
   }
 
   get query() {
@@ -40,19 +38,7 @@ export default class NewsApiService {
     this.searchQuery = newQuery;
   }
 
-  get hits() {
-    return this.totalHits;
-  }
-
-  set hits(newHits) {
-    this.totalHits = newHits;
-  }
-
-  incrementTotalHits() {
-    return (this.total += this.per_page);
-  }
-
-  leftImages() {
-    return (this.remainder = this.totalHits - this.total);
+  countTotalPages(totalHits) {
+    return (this.totalPages = Math.ceil(totalHits / this.per_page));
   }
 }
