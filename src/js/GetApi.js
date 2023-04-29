@@ -22,7 +22,7 @@ export default class NewsApiService {
   }
 
   incrementPage() {
-    this.page += 1;
+    return (this.page += 1);
   }
 
   resetPage() {

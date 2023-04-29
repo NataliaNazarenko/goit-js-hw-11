@@ -53,7 +53,7 @@ async function getImagesMarkup() {
     console.log(totalPages);
     console.log(totalHits);
 
-    if (hits.length === 0) {
+    if (totalHits === 0) {
       loadMoreBtn.hide();
       return Notify.info(
         'Sorry, there are no images matching your search query. Please try again.'
